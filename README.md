@@ -17,3 +17,17 @@ Current database structure:
 gridops
 └── energy
     └── power_measurements
+
+ ### Project Structure
+
+```text
+gridops-ai/
+├── data/
+│   └── raw/
+├── sql/
+│   └── schema.sql
+├── src/
+│   └── load_to_postgres.py
+├── README.md
+├── .gitignore
+└── requirements.txt
