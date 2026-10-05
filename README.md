@@ -33,7 +33,10 @@ gridops
 * Analysed consumption by day and hour
 * Used Common Table Expressions (CTEs)
 * Used window functions such as `LAG()` for period-over-period comparisons
-* Added initial analysis of consumption changes over time
+* Implemented rolling 24-hour consumption averages
+* Identified unusually high-demand periods using statistical thresholds
+* Ranked the three distribution zones by average consumption
+* Added analysis of consumption changes and demand patterns over time
 
 ### Project Status
 
@@ -44,10 +47,10 @@ gridops
 * [x] PostgreSQL database setup
 * [x] Data loading pipeline
 * [x] Initial SQL analytics
+* [x] Advanced SQL analytics
 
 **Next**
 
-* [ ] Advanced SQL analytics
 * [ ] Feature engineering
 * [ ] Machine learning models
 * [ ] Model tracking with MLflow
