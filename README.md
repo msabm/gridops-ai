@@ -38,6 +38,16 @@ gridops
 * Ranked the three distribution zones by average consumption
 * Added analysis of consumption changes and demand patterns over time
 
+### Feature Engineering
+* Built a Python feature-engineering pipeline using data loaded from PostgreSQL
+* Created time-based features including hour, day of week, month, and weekend indicators
+* Created total power consumption across all three zones
+* Calculated individual zone consumption shares
+* Created lag features for 10-minute, 1-hour, and 24-hour historical demand
+* Created rolling mean features for 1-hour, 6-hour, and 24-hour demand windows
+*Prepared the dataset for the upcoming machine learning stage
+
+
 ### Project Status
 
 **Completed**
@@ -48,10 +58,10 @@ gridops
 * [x] Data loading pipeline
 * [x] Initial SQL analytics
 * [x] Advanced SQL analytics
+* [x] Feature engineering
 
 **Next**
 
-* [ ] Feature engineering
 * [ ] Machine learning models
 * [ ] Model tracking with MLflow
 * [ ] FastAPI model serving
