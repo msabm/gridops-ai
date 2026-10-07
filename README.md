@@ -47,7 +47,14 @@ gridops
 * Created lag features for 10-minute, 1-hour, and 24-hour historical demand
 * Created rolling mean features for 1-hour, 6-hour, and 24-hour demand windows
 * Prepared the dataset for the upcoming machine learning stage
+* Prepared the dataset for one-hour-ahead electricity demand forecasting
 
+### Forecasting Dataset
+* Defined total power consumption as the forecasting target
+* Created a one-hour-ahead target using the 10-minute measurement frequency
+* Used a 6-step forward shift to represent one hour of future demand
+* Removed rows without a valid forecasting target
+* Verified the final dataset contains 52,411 forecasting observations
 
 ### Project Status
 
@@ -60,6 +67,7 @@ gridops
 * [x] Initial SQL analytics
 * [x] Advanced SQL analytics
 * [x] Feature engineering
+* [x] Forecasting target
 
 **Next**
 

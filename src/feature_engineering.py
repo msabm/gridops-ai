@@ -32,6 +32,7 @@ def load_data():
 
     connection = psycopg2.connect(**DB_CONFIG)
     df = pd.read_sql(query, connection)
+    df = df.drop_duplicates(subset=["measured_at"])
     connection.close()
 
     return df
@@ -96,6 +97,15 @@ def create_rolling_features(df):
     return df
 
 
+def create_forecasting_target(df):
+    # Creating 1 hour ahead electricity demand target
+    # data is 10 minutes frequency, so 6 rows = 1 hour
+
+    df["target_1h_ahead"] = df["total_power_consumption"].shift(-6)
+    
+    return df
+
+
 def main():
     df = load_data()
     print(f"Rows loaded: {len(df):,}")
@@ -105,6 +115,7 @@ def main():
     df = create_energy_features(df)
     df = create_lag_features(df)
     df = create_rolling_features(df)
+    df = create_forecasting_target(df)
 
     print(f"Columns after feature engineering: {len(df.columns):,}")
     print(f"\nFeature Engineering Results:\n{df.head()}")
@@ -118,6 +129,12 @@ def main():
     
     for feature in new_features:
         print(f" - {feature}")
+
+    df = df.dropna(subset=["target_1h_ahead"])
+    
+    print(df[["measured_at", "total_power_consumption", "target_1h_ahead"]].head(10))
+    print(f"\nRows after target creation: {len(df)}")
+    print(f"Missing targets: {df['target_1h_ahead'].isna().sum()}")
 
 
 if __name__ == "__main__":
