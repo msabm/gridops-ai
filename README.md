@@ -68,10 +68,14 @@ gridops
 * [x] Advanced SQL analytics
 * [x] Feature engineering
 * [x] Forecasting target
+* [x] First machine learning benchmark
 
 **Next**
 
-* [ ] Machine learning models
+* [ ] Build naive forecasting baseline
+* [ ] Compare naive and machine learning baselines
+* [ ] Compare machine learning models
+* [ ] Model explainability with SHAP
 * [ ] Model tracking with MLflow
 * [ ] FastAPI model serving
 * [ ] Agentic AI integration

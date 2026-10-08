@@ -84,7 +84,6 @@ def create_rolling_features(df):
     df["rolling_1h_mean"] = (
         df["total_power_consumption"].rolling(window=6).mean()
     )
-    return df
 
     df["rolling_6h_mean"] = (
         df["total_power_consumption"].rolling(window=36).mean()
