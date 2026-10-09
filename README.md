@@ -46,15 +46,41 @@ gridops
 * Calculated individual zone consumption shares
 * Created lag features for 10-minute, 1-hour, and 24-hour historical demand
 * Created rolling mean features for 1-hour, 6-hour, and 24-hour demand windows
-* Prepared the dataset for the upcoming machine learning stage
 * Prepared the dataset for one-hour-ahead electricity demand forecasting
 
 ### Forecasting Dataset
+
 * Defined total power consumption as the forecasting target
 * Created a one-hour-ahead target using the 10-minute measurement frequency
 * Used a 6-step forward shift to represent one hour of future demand
 * Removed rows without a valid forecasting target
 * Verified the final dataset contains 52,411 forecasting observations
+
+### Machine Learning Baseline
+
+* Implemented a Random Forest Regressor for one-hour-ahead electricity demand forecasting
+* Established a naive baseline using current demand to predict demand one hour ahead
+* Used 20 engineered features for the Random Forest model
+* Applied a chronological 80/20 train/test split to preserve time-series order
+* Evaluated both models using MAE, MSE, RMSE, R², and MAPE
+
+### Model Comparison
+
+| Metric | Naive Baseline | Random Forest |
+| ------ | -------------: | ------------: |
+| MAE    |       4,178.64 |      2,667.78 |
+| MSE    |  35,271,703.25 | 15,086,067.73 |
+| RMSE   |       5,939.00 |      3,884.08 |
+| R²     |         0.8232 |        0.9244 |
+| MAPE   |          6.46% |         4.34% |
+
+### Key Findings
+
+* Random Forest reduced MAE by approximately 36.2%
+* RMSE decreased by approximately 34.6%
+* Random Forest achieved an R² score of 0.9244 on the held-out test set
+* MAPE decreased from 6.46% to 4.34%
+* The results establish an initial machine learning benchmark for future model development
 
 ### Project Status
 
@@ -69,11 +95,12 @@ gridops
 * [x] Feature engineering
 * [x] Forecasting target
 * [x] First machine learning benchmark
+* [x] Build naive forecasting baseline
+* [x] Compare naive and machine learning baselines
+
 
 **Next**
 
-* [ ] Build naive forecasting baseline
-* [ ] Compare naive and machine learning baselines
 * [ ] Compare machine learning models
 * [ ] Model explainability with SHAP
 * [ ] Model tracking with MLflow

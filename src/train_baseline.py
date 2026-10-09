@@ -81,8 +81,7 @@ print(f"{df['measured_at'].iloc[split_index:].min()} to {df['measured_at'].iloc[
 
 # Training the baseline model
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-import numpy as np
+import joblib
 
 model = RandomForestRegressor(
     n_estimators=100, random_state=42, n_jobs=-1
@@ -93,13 +92,18 @@ model.fit(X_train, y_train)
 # predicting
 predictions = model.predict(X_test)
 
-# evaluating the model
-mae = mean_absolute_error(y_test, predictions)
-mse = mean_squared_error(y_test, predictions)
-r2 = r2_score(y_test, predictions)
+# saving model for evaluation
+joblib.dump(model, "models/random_forest.joblib")
 
-print(f"\nBaseline Model Performance: "
-    f"\nMAE: {mae:.2f}"
-    f"\nMSE: {mse:.2f}"
-    f"\nR2: {r2:.4f}"
-    ) 
+results = pd.DataFrame({
+    "measured_at": df["measured_at"].iloc[split_index:].to_numpy(),
+    "actual": y_test.to_numpy(),
+    "random_forest_predictions": predictions,
+    # naive baseline: demand at time t is prediction of demand at time t+1
+    "naive_predictions": df["total_power_consumption"].iloc[split_index:].to_numpy()
+})
+
+results.to_csv("data/test_predictions.csv", index=False)
+
+print("Model saved to models/random_forest.joblib")
+print("Test predictions saved to data/test_predictions.csv")
