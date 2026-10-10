@@ -45,7 +45,7 @@ features = [
     "zone_2_share",
     "zone_3_share",
     "lag_1",
-    "lag_5",
+    "lag_6",
     "lag_144",
     "rolling_1h_mean",
     "rolling_6h_mean",
@@ -53,6 +53,7 @@ features = [
 ]
 
 target = "target_1h_ahead"
+df["target_timestamp"] = df["measured_at"].shift(-6)
 
 
 X = df[features]
@@ -89,18 +90,25 @@ model = RandomForestRegressor(
 
 model.fit(X_train, y_train)
 
-# predicting
+# random forest predictions
 predictions = model.predict(X_test)
 
 # saving model for evaluation
 joblib.dump(model, "models/random_forest.joblib")
 
+# naive predictions using current demand - current demand predicts demand one hour ahead
+naive_predictions = X_test["total_power_consumption"].to_numpy()
+
+# seasonal naive predictions - demand at t-23h predicts demand at t+1h (23*6=138)
+seasonal_naive_predictions = df["total_power_consumption"].shift(138).iloc[split_index:].to_numpy()
+
 results = pd.DataFrame({
     "measured_at": df["measured_at"].iloc[split_index:].to_numpy(),
+    "target_timestamp": df["target_timestamp"].iloc[split_index:],
     "actual": y_test.to_numpy(),
-    "random_forest_predictions": predictions,
-    # naive baseline: demand at time t is prediction of demand at time t+1
-    "naive_predictions": df["total_power_consumption"].iloc[split_index:].to_numpy()
+    "naive_predictions": naive_predictions,
+    "seasonal_naive_predictions": seasonal_naive_predictions,
+    "random_forest_predictions": predictions
 })
 
 results.to_csv("data/test_predictions.csv", index=False)

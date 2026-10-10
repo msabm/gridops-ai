@@ -74,7 +74,7 @@ def create_energy_features(df):
 
 def create_lag_features(df):
     df["lag_1"] = df["total_power_consumption"].shift(1)
-    df["lag_5"] = df["total_power_consumption"].shift(6)
+    df["lag_6"] = df["total_power_consumption"].shift(6)
     df["lag_144"] = df["total_power_consumption"].shift(144)
     
     return df
@@ -105,11 +105,26 @@ def create_forecasting_target(df):
     return df
 
 
+# checking timestamp quality
+def check_timestamp_quality(df):
+    timestamps = df["measured_at"].sort_values()
+    time_gaps = timestamps.diff().dropna()
+
+    print(f"\nRows: {len(df):,}"
+          f"\nDuplicate timestamps: {df['measured_at'].duplicated().sum():,}"
+          f"\nMin interval: {time_gaps.min()}"
+          f"\nMax interval: {time_gaps.max()}"
+          f"\nMost common intervals:\n {time_gaps.value_counts().head(5)}"
+          )
+    return df
+
+
 def main():
     df = load_data()
     print(f"Rows loaded: {len(df):,}")
     print(f"Columns before feature engineering: {len(df.columns):,}")
 
+    df = check_timestamp_quality(df)
     df = create_time_features(df)
     df = create_energy_features(df)
     df = create_lag_features(df)
@@ -123,7 +138,7 @@ def main():
     
     new_features = ["hour", "day_of_week", "month", "year", "is_weekend", 
                     "total_power_consumption", "zone_1_share", "zone_2_share", "zone_3_share",
-                    "lag_1", "lag_5", "lag_144", 
+                    "lag_1", "lag_6", "lag_144", 
                     "rolling_1h_mean", "rolling_6h_mean", "rolling_24h_mean"]
     
     for feature in new_features:
