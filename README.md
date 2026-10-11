@@ -139,7 +139,7 @@ gridops-ai/
 │   ├── train_xgboost.py
 │   └── evaluate_baselines.py
 └── README.md
-'''
+```
 
 ### Project Status
 
