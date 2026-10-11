@@ -119,6 +119,7 @@ The predictions CSV contains the actual test-set demand, forecast timestamps, ba
 
 ### Project Structure
 
+```text
 gridops-ai/
 ├── data/
 │   ├── raw/
@@ -138,7 +139,7 @@ gridops-ai/
 │   ├── train_xgboost.py
 │   └── evaluate_baselines.py
 └── README.md
-
+'''
 
 ### Project Status
 
