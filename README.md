@@ -53,8 +53,9 @@ gridops
 * Defined total power consumption as the forecasting target
 * Created a one-hour-ahead target using the 10-minute measurement frequency
 * Used a 6-step forward shift to represent one hour of future demand
-* Removed rows without a valid forecasting target
-* Verified the final dataset contains 52,411 forecasting observations
+* Removed rows without valid features, targets or baseline predictions.
+* Used a chronological 80/20 train-test split to avoid randomly mixing historical and future observations.
+* Current prepared dataset: 52,266 observations, comprising 41,812 training observations and 10,454 test observations.
 
 ### Machine Learning Baselines
 
@@ -67,8 +68,9 @@ Three forecasting approaches are currently evaluated:
    the one-hour-ahead target on the previous day.
 3. **Random Forest Regressor** — uses engineered time, weather
    and historical energy-demand features.
+4. **XGBoost Regressor** — uses the engineered features to model nonlinear relationships and improve forecasting accuracy.
 
-Models are evaluated using a chronological 80/20 train-test split.
+Models are evaluated using the same chronological test period.
 
 ### Model Comparison
 
@@ -77,12 +79,66 @@ Models are evaluated using a chronological 80/20 train-test split.
 | Persistence Baseline | 4,178.64 | 35,271,703.25 | 5,939.00 | 0.8232 | 6.46% |
 | Seasonal-Naive Baseline | 2,117.48 | 10,350,769.25 | 3,217.26 | 0.9481 | 3.38% |
 | Random Forest | 2,667.78 | 15,086,067.73 | 3,884.08 | 0.9244 | 4.34% |
+| XGBoost | 2,277.73 | 12,682,337.26 | 3,561.23 | 0.9366 | 3.65% |
+
+### Evaluation metrics
+* **Mean Absolute Error**: Average absolute difference between predicted and actual demand.
+* **Mean Squared Error**: Average squared prediction error, which penalises larger errors more heavily.
+* **Root Mean Squared Error**: Square root of MSE, expressed in the same units as demand.
+* **Coefficient of Determination**: Measures predictive performance relative to a test-set mean baseline; higher is generally better.
+* **Mean Absolute Percentage Error**: Average absolute percentage error.
+
+Lower MAE, MSE, RMSE and MAPE indicate lower prediction error. Higher R² indicates better performance relative to the test-set mean baseline.
+
+
 
 ### Key Findings
 
-* Lower MAE, MSE, RMSE and MAPE indicate lower prediction error. Higher R² indicates a better fit relative to predicting the test-set mean.
+* The seasonal-naive baseline currently achieves the strongest overall results, with an MAE of 2,118.64 and an R² of 0.9482.
+* XGBoost outperforms Random Forest, reducing MAE by approximately 13.7% and RMSE by approximately 8.0%.
+* Both machine-learning models outperform the persistence baseline but do not yet outperform the seasonal-naive benchmark.
+* The results demonstrate the importance of daily electricity-demand patterns and establish a strong benchmark for further model development.
+* A useful next step is to investigate performance by hour, day of week and demand level to identify where machine learning may provide additional value.
 
-* The seasonal-naive baseline currently outperforms the Random Forest on this test set. This highlights the importance of daily demand patterns and establishes a benchmark that more advanced models must improve upon.
+### Predictions Dataset: data/test_predictions.csv
+
+The predictions CSV contains the actual test-set demand, forecast timestamps, baseline predictions and machine-learning predictions.
+
+
+| Column |	Meaning |
+|----|:----| 
+| forecast_origin	| Timestamp when the prediction is made |
+| target_timestamp |	Timestamp one hour after the forecast origin; the time being predicted |
+| actual	| Actual demand recorded at target_timestamp |
+| seasonal_naive_source_timestamp |	Historical timestamp of the demand observation used by the seasonal-naive forecast |
+| naive_predictions	| Persistence forecast, using current demand to predict demand one hour ahead |
+| seasonal_naive_predictions |	Seasonal-naive forecast based on historical demand at the corresponding time on the previous day |
+| random_forest_predictions |	Demand forecast produced by the Random Forest model |
+| xgboost_predictions |	Demand forecast produced by the XGBoost model |
+
+
+### Project Structure
+
+gridops-ai/
+├── data/
+│   ├── raw/
+│   └── test_predictions.csv
+├── models/
+│   ├── random_forest.joblib
+│   └── xgboost.joblib
+├── sql/
+│   ├── schema.sql
+│   ├── README.md
+│   └── analytics.sql
+├── src/
+│   ├── load_to_postgres.py
+│   ├── feature_engineering.py
+│   ├── prepare_data.py
+│   ├── train_baseline.py
+│   ├── train_xgboost.py
+│   └── evaluate_baselines.py
+└── README.md
+
 
 ### Project Status
 
