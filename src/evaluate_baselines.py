@@ -10,7 +10,8 @@ actual = results["actual"].to_numpy()
 models = {
     "Naive Baseline":results["naive_predictions"],
     "Seasonal Naive Baseline":results["seasonal_naive_predictions"],
-    "Random Forest":results["random_forest_predictions"]
+    "Random Forest":results["random_forest_predictions"],
+    "XGBoost":results["xgboost_predictions"]
 }
 
 comparison = []
