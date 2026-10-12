@@ -80,7 +80,7 @@ Models are evaluated using the same chronological test period.
 | Seasonal-Naive Baseline | 2,117.48 | 10,350,769.25 | 3,217.26 | 0.9481 | 3.38% |
 | Random Forest | 2,667.78 | 15,086,067.73 | 3,884.08 | 0.9244 | 4.34% |
 | XGBoost | 2,277.73 | 12,682,337.26 | 3,561.23 | 0.9366 | 3.65% |
-| LightGBM | 2245.15 | 11814271.45 | 3437.19 | 0.9408 | 3.66% |
+| LightGBM | 2,245.15 | 11,814,271.45 | 3,437.19 | 0.9408 | 3.66% |
 
 ### Evaluation metrics
 
