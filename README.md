@@ -80,8 +80,10 @@ Models are evaluated using the same chronological test period.
 | Seasonal-Naive Baseline | 2,117.48 | 10,350,769.25 | 3,217.26 | 0.9481 | 3.38% |
 | Random Forest | 2,667.78 | 15,086,067.73 | 3,884.08 | 0.9244 | 4.34% |
 | XGBoost | 2,277.73 | 12,682,337.26 | 3,561.23 | 0.9366 | 3.65% |
+| LightGBM | 2,245.15 |	3,437.19 |	0.9408 |	3.66% |
 
 ### Evaluation metrics
+
 * **Mean Absolute Error**: Average absolute difference between predicted and actual demand.
 * **Mean Squared Error**: Average squared prediction error, which penalises larger errors more heavily.
 * **Root Mean Squared Error**: Square root of MSE, expressed in the same units as demand.
@@ -90,14 +92,12 @@ Models are evaluated using the same chronological test period.
 
 Lower MAE, MSE, RMSE and MAPE indicate lower prediction error. Higher R² indicates better performance relative to the test-set mean baseline.
 
-
-
 ### Key Findings
 
-* The seasonal-naive baseline currently achieves the strongest overall results, with an MAE of 2,118.64 and an R² of 0.9482.
-* XGBoost outperforms Random Forest, reducing MAE by approximately 13.7% and RMSE by approximately 8.0%.
-* Both machine-learning models outperform the persistence baseline but do not yet outperform the seasonal-naive benchmark.
-* The results demonstrate the importance of daily electricity-demand patterns and establish a strong benchmark for further model development.
+* The Seasonal Naive baseline achieved the best overall forecasting performance, with an MAE of 2,117.48 and an R² of 0.9481.
+* LightGBM marginally outperformed XGBoost on MAE, RMSE, and R², while XGBoost achieved a slightly lower MAPE.
+* Both boosting models outperformed Random Forest across the reported metrics.
+* The results highlight the importance of evaluating machine-learning models against simple time-series baselines. Daily demand patterns provide a strong benchmark for short-term electricity demand forecasting.
 * A useful next step is to investigate performance by hour, day of week and demand level to identify where machine learning may provide additional value.
 
 ### Predictions Dataset: data/test_predictions.csv
@@ -110,7 +110,6 @@ The predictions CSV contains the actual test-set demand, forecast timestamps, ba
 | forecast_origin	| Timestamp when the prediction is made |
 | target_timestamp |	Timestamp one hour after the forecast origin; the time being predicted |
 | actual	| Actual demand recorded at target_timestamp |
-| seasonal_naive_source_timestamp |	Historical timestamp of the demand observation used by the seasonal-naive forecast |
 | naive_predictions	| Persistence forecast, using current demand to predict demand one hour ahead |
 | seasonal_naive_predictions |	Seasonal-naive forecast based on historical demand at the corresponding time on the previous day |
 | random_forest_predictions |	Demand forecast produced by the Random Forest model |
@@ -137,6 +136,7 @@ gridops-ai/
 │   ├── prepare_data.py
 │   ├── train_baseline.py
 │   ├── train_xgboost.py
+|   ├── train_lightgbm.py
 │   └── evaluate_baselines.py
 └── README.md
 ```
