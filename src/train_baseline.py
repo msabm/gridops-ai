@@ -27,12 +27,11 @@ seasonal_naive_predictions = test_df["seasonal_naive_predictions"].to_numpy()
 
 results = pd.DataFrame({
     "forecast_origin": test_df["measured_at"].to_numpy(),
-    "actual": y_test.to_numpy(),
-    "target_timestamp_naive": test_df["target_timestamp_naive"].to_numpy(),
-    "naive_predictions": naive_predictions,
-    "target_timestamp_seasonal_naive":test_df["target_timestamp_seasonal_naive"].to_numpy(),
-    "seasonal_naive_predictions": seasonal_naive_predictions,
-    "random_forest_predictions": predictions
+    "target_timestamp": test_df["target_timestamp"].to_numpy(),
+    "actual": pd.to_numeric(y_test.to_numpy()),
+    "naive_predictions": pd.to_numeric(naive_predictions),
+    "seasonal_naive_predictions": pd.to_numeric(seasonal_naive_predictions),
+    "random_forest_predictions": pd.to_numeric(predictions)
 })
 
 results.to_csv("data/test_predictions.csv", index=False)

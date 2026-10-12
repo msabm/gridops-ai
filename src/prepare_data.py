@@ -42,9 +42,8 @@ def prepare_data():
     df = create_forecasting_target(df)
 
     # timestamps before removing rows with missing values
-    df["target_timestamp_naive"] = df["measured_at"].shift(-6)
-    df["target_timestamp_seasonal_naive"] = df["measured_at"].shift(138)
-
+    df["target_timestamp"] = df["measured_at"].shift(-6)
+    
     # Current demand predicts demand one hour ahead
     df["naive_predictions"] = df["total_power_consumption"]
 

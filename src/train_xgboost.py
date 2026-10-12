@@ -28,15 +28,15 @@ predictions = model.predict(X_test)
 
 joblib.dump(model, "models/xgboost.joblib")
 
-# Add XGBoost predictions to the existing results file
+# adding XGBoost predictions to the existing results file
 results_path = Path("data/test_predictions.csv")
 results = pd.read_csv(results_path)
 
 # adding/replacing xgb column
-results["xgboost_predictions"] = predictions
+results["xgboost_predictions"] = pd.to_numeric(predictions)
 
 results.to_csv(results_path, index=False)
 
 print(f"\nModel saved to models/xgboost.joblib"
-      f"\nPredictions saved to data/xgboost_predictions.csv"
+      f"\nPredictions saved to data/test_predictions.csv"
     )
