@@ -12,7 +12,8 @@ models = {
     "Seasonal Naive Baseline":results["seasonal_naive_predictions"],
     "Random Forest":results["random_forest_predictions"],
     "XGBoost":results["xgboost_predictions"],
-    "LightGBM":results["lightgbm_predictions"]
+    "LightGBM":results["lightgbm_predictions"],
+    "LSTM":results["lstm_predictions"]
 }
 
 comparison = []

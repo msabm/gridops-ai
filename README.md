@@ -57,18 +57,18 @@ gridops
 * Used a chronological 80/20 train-test split to avoid randomly mixing historical and future observations.
 * Current prepared dataset: 52,266 observations, comprising 41,812 training observations and 10,454 test observations.
 
-### Machine Learning Baselines
+### Forecasting Models
 
 Three forecasting approaches are currently evaluated:
 
-1. **Persistence baseline** — uses current demand to predict demand
-   one hour ahead.
-2. **Seasonal-naive baseline** — uses demand from 23 hours before
-   the forecast origin, corresponding to the same time of day as
-   the one-hour-ahead target on the previous day.
-3. **Random Forest Regressor** — uses engineered time, weather
-   and historical energy-demand features.
+1. **Persistence baseline** — uses current demand to predict demand one hour ahead.
+2. **Seasonal-naive baseline** — uses demand from 23 hours before the forecast origin, corresponding to the same time of day as the one-hour-ahead target on the previous day.
+3. **Random Forest Regressor** — uses engineered time, weather and historical energy-demand features.
 4. **XGBoost Regressor** — uses the engineered features to model nonlinear relationships and improve forecasting accuracy.
+5. **LightGBM Regressor** — uses gradient boosting with a tree-based learning approach for demand forecasting.
+6. **LSTM Neural Network** — uses sequences of 144 ten-minute observations (24 hours) and 20 engineered features per time step to predict demand one hour ahead.
+
+The LSTM uses TensorFlow/Keras, with feature and target scaling, dropout regularisation, early stopping and learning-rate reduction.
 
 Models are evaluated using the same chronological test period.
 
@@ -81,6 +81,7 @@ Models are evaluated using the same chronological test period.
 | Random Forest | 2,667.78 | 15,086,067.73 | 3,884.08 | 0.9244 | 4.34% |
 | XGBoost | 2,277.73 | 12,682,337.26 | 3,561.23 | 0.9366 | 3.65% |
 | LightGBM | 2,245.15 | 11,814,271.45 | 3,437.19 | 0.9408 | 3.66% |
+| LSTM | 4,746.12 | 36,039,675.62 | 6,003.31 | 0.8193 | 7.65% |
 
 ### Evaluation metrics
 
@@ -99,6 +100,7 @@ Lower MAE, MSE, RMSE and MAPE indicate lower prediction error. Higher R² indica
 * Both boosting models outperformed Random Forest across the reported metrics.
 * The results highlight the importance of evaluating machine-learning models against simple time-series baselines. Daily demand patterns provide a strong benchmark for short-term electricity demand forecasting.
 * A useful next step is to investigate performance by hour, day of week and demand level to identify where machine learning may provide additional value.
+* The LSTM currently underperforms the simpler forecasting baselines and requires further investigation and tuning.
 
 ### Predictions Dataset: data/test_predictions.csv
 
@@ -125,7 +127,9 @@ gridops-ai/
 │   └── test_predictions.csv
 ├── models/
 │   ├── random_forest.joblib
-│   └── xgboost.joblib
+│   ├── xgboost.joblib
+│   ├── lightgbm.joblib
+│   └── lstm_model.keras
 ├── sql/
 │   ├── schema.sql
 │   ├── README.md
@@ -137,6 +141,7 @@ gridops-ai/
 │   ├── train_baseline.py
 │   ├── train_xgboost.py
 |   ├── train_lightgbm.py
+|   ├── train_lstm.py
 │   └── evaluate_baselines.py
 └── README.md
 ```
@@ -156,11 +161,10 @@ gridops-ai/
 * [x] First machine learning benchmark
 * [x] Build naive forecasting baselines
 * [x] Compare naive and machine learning baselines
-
+* [x] Compare machine learning models
 
 **Next**
 
-* [ ] Compare machine learning models
 * [ ] Model explainability with SHAP
 * [ ] Model tracking with MLflow
 * [ ] FastAPI model serving
