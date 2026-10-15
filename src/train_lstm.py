@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd
 import joblib
+import matplotlib.pyplot as plt
 
 from pathlib import Path
 
@@ -87,7 +88,7 @@ model.compile(
 )
 
 
-model.fit(
+history = model.fit(
     X_train_seq,
     y_train_seq,
     epochs = epochs,
@@ -145,3 +146,60 @@ print(f"Lookback window: {lookback} time steps"
       f"\nTesting rows: {len(X_test):,}"
       f"\nFeatures: {X_train.shape[1]}"
       )
+
+
+# creating visuals
+plot_dir = Path("data/plots")
+
+epochs_ran = range(1, len(history.history["loss"]) + 1)
+
+# training and validation loss
+plt.figure(figsize=(10, 5))
+plt.plot(epochs_ran, history.history["loss"], label="Training Loss")
+plt.plot(epochs_ran, history.history["val_loss"], label="Validation Loss")
+plt.xlabel("Epoch")
+plt.ylabel("MSE Loss - scaled")
+plt.title("LSTM Training Curves")
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig(plot_dir / "lstm_loss_curves.png", dpi=150)
+plt.close()
+
+# training and validation mae
+plt.figure(figsize=(10, 5))
+plt.plot(epochs_ran, history.history["mae"], label="Training MAE")
+plt.plot(epochs_ran, history.history["val_mae"], label="Validation MAE")
+plt.xlabel("Epoch")
+plt.ylabel("MAE - scaled")
+plt.title("LSTM Training MAE curves")
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig(plot_dir / "lstm_mae_curves.png", dpi=150)
+plt.close()
+
+print(f"Training plots saved in: {plot_dir.resolve()}")
+
+
+# setting up residual analysis
+actual = results["actual"]
+predicted = results["lstm_predictions"]
+resuduals = actual - predicted
+
+# 1. actual vs predicted demand
+plt.figure(figsize=(10, 5))
+plt.scatter(actual, predicted, alpha=0.4, s=10)
+
+lower = min(actual.min(), predicted.min())
+upper = max(actual.max(), predicted.max())
+plt.plot([lower, upper], [lower, upper], linestyle="--")
+
+plt.xlabel("Actual Demand")
+plt.ylabel("Predicted Demand")
+plt.title("LSTM: Actual vs Predicted Demand")
+plt.tight_layout()
+plt.savefig(plot_dir / "lstm_actual_vs_predicted_demand.png", dpi=150)
+plt.close()
+
+# 2. residual destribution
