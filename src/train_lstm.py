@@ -73,10 +73,10 @@ assert len(X_test_seq) == len(X_test), "Test sequence alignment error"
 
 model = tf.keras.Sequential([
     tf.keras.layers.Input(shape=(lookback, X_train.shape[1])),
-    tf.keras.layers.LSTM(64, return_sequences=True),
+    tf.keras.layers.LSTM(96, return_sequences=True),
     tf.keras.layers.Dropout(0.2),
-    tf.keras.layers.LSTM(32),
-    tf.keras.layers.Dense(16, activation="relu"),
+    tf.keras.layers.LSTM(48),
+    tf.keras.layers.Dense(24, activation="relu"),
     tf.keras.layers.Dense(1),
 ])
 
@@ -185,7 +185,7 @@ print(f"Training plots saved in: {plot_dir.resolve()}")
 # setting up residual analysis
 actual = results["actual"]
 predicted = results["lstm_predictions"]
-resuduals = actual - predicted
+residuals = actual - predicted
 
 # 1. actual vs predicted demand
 plt.figure(figsize=(10, 5))
@@ -202,4 +202,40 @@ plt.tight_layout()
 plt.savefig(plot_dir / "lstm_actual_vs_predicted_demand.png", dpi=150)
 plt.close()
 
-# 2. residual destribution
+# 2. residual distribution
+plt.figure(figsize=(10,5))
+plt.hist(residuals, bins=50, edgecolor="black")
+plt.axvline(0, linestyle="--")
+plt.xlabel("Residuals (actual - predicted)")
+plt.ylabel("Frequency")
+plt.title("LSTM Residual Distribution")
+plt.savefig(plot_dir / "lstm_residual_distribution.png", dpi=150)
+plt.close()
+
+# 3. residuals over forecast time
+plt.figure(figsize=(12, 5))
+plt.plot(residuals, linewidth=0.7)
+plt.axhline(0, linestyle="--")
+plt.xlabel("Test Observation")
+plt.ylabel("Residuals")
+plt.title("LSTM Residuals Over Test Period")
+plt.tight_layout()
+plt.savefig(plot_dir / "lstm_residuals_over_time.png")
+plt.close()
+
+# 4. residuals over predicted time
+plt.figure(figsize=(10,5))
+plt.scatter(predicted, residuals, alpha=0.4, s=10)
+plt.axhline(0, linestyle="--")
+plt.xlabel("Predicted Demand")
+plt.ylabel("Residuals")
+plt.title("LSTM Residuals vs Predicted Demand")
+plt.tight_layout()
+plt.savefig(plot_dir / "lstm_residuals_vs_predicted_time.png", dpi=150)
+plt.close()
+
+
+print(f"Residual plots saved in: {plot_dir.resolve()}"
+      f"\nResidual mean: {residuals.mean():,.2f}"
+      f"\nResidual standard deviation: {residuals.std():,.2f}"
+      )
