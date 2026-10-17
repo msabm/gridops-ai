@@ -16,7 +16,7 @@ The project uses PostgreSQL to store the electricity and environmental measureme
 
 Current database structure:
 
-```text
+```
 gridops
 └── energy
     └── power_measurements
@@ -120,10 +120,11 @@ The predictions CSV contains the actual test-set demand, forecast timestamps, ba
 
 ### Project Structure
 
-```text
+```
 gridops-ai/
 ├── data/
 │   ├── raw/
+│   ├── experiment_logs.xlsx
 │   └── test_predictions.csv
 ├── models/
 │   ├── random_forest.joblib
