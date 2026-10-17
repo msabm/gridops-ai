@@ -12,6 +12,8 @@ from prepare_data import prepare_data
 
 X_train, X_test, y_train, y_test, test_df = prepare_data()
 
+test_timestamps = pd.to_datetime(test_df["measured_at"])
+
 np.random.seed(42)
 tf.random.set_seed(42)
 
@@ -73,17 +75,17 @@ assert len(X_test_seq) == len(X_test), "Test sequence alignment error"
 
 model = tf.keras.Sequential([
     tf.keras.layers.Input(shape=(lookback, X_train.shape[1])),
-    tf.keras.layers.LSTM(96, return_sequences=True),
+    tf.keras.layers.LSTM(64, return_sequences=True),
     tf.keras.layers.Dropout(0.2),
-    tf.keras.layers.LSTM(48),
-    tf.keras.layers.Dense(24, activation="relu"),
+    tf.keras.layers.LSTM(32),
+    tf.keras.layers.Dense(16, activation="relu"),
     tf.keras.layers.Dense(1),
 ])
 
 
 model.compile(
     optimizer = tf.keras.optimizers.Adam(learning_rate=0.001),
-    loss = "mse",
+    loss = tf.keras.losses.Huber(delta=1.0),
     metrics = ["mae"],
 )
 
@@ -110,6 +112,10 @@ history = model.fit(
     shuffle = False,
     verbose = 1,
 )
+
+
+best_epoch = int(np.argmin(history.history["val_loss"]) + 1)
+best_val_loss = float(min(history.history["val_loss"]))
 
 
 # generating predictions in scaled units
@@ -158,7 +164,8 @@ plt.figure(figsize=(10, 5))
 plt.plot(epochs_ran, history.history["loss"], label="Training Loss")
 plt.plot(epochs_ran, history.history["val_loss"], label="Validation Loss")
 plt.xlabel("Epoch")
-plt.ylabel("MSE Loss - scaled")
+#plt.ylabel("MSE Loss - scaled")
+plt.ylabel("Huber Loss - scaled")
 plt.title("LSTM Training Curves")
 plt.legend()
 plt.grid(True, alpha=0.3)
@@ -214,9 +221,9 @@ plt.close()
 
 # 3. residuals over forecast time
 plt.figure(figsize=(12, 5))
-plt.plot(residuals, linewidth=0.7)
+plt.plot(test_timestamps, residuals, linewidth=0.7)
 plt.axhline(0, linestyle="--")
-plt.xlabel("Test Observation")
+plt.xlabel("Date/Time")
 plt.ylabel("Residuals")
 plt.title("LSTM Residuals Over Test Period")
 plt.tight_layout()
@@ -239,3 +246,6 @@ print(f"Residual plots saved in: {plot_dir.resolve()}"
       f"\nResidual mean: {residuals.mean():,.2f}"
       f"\nResidual standard deviation: {residuals.std():,.2f}"
       )
+
+print(f"Best epoch: {best_epoch}")
+print(f"Best validation loss: {best_val_loss:.5f}")
