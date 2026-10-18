@@ -123,6 +123,7 @@ The predictions CSV contains the actual test-set demand, forecast timestamps, ba
 ```
 gridops-ai/
 ├── data/
+│   ├── plots/
 │   ├── raw/
 │   ├── experiment_logs.xlsx
 │   └── test_predictions.csv
@@ -143,7 +144,7 @@ gridops-ai/
 │   ├── train_xgboost.py
 |   ├── train_lightgbm.py
 |   ├── train_lstm.py
-│   └── evaluate_baselines.py
+│   └── evaluate.py
 └── README.md
 ```
 
