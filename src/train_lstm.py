@@ -101,10 +101,11 @@ assert len(X_test_seq) == len(X_test), "Test sequence alignment error"
 
 model = tf.keras.Sequential([
     tf.keras.layers.Input(shape=(lookback, X_train.shape[1])),
-    #tf.keras.layers.LSTM(64, return_sequences=True),
-    #tf.keras.layers.Dropout(0.2),
-    tf.keras.layers.LSTM(32),
-    tf.keras.layers.Dense(16, activation="relu"),
+    tf.keras.layers.LSTM(128, return_sequences=True),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.LSTM(64),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Dense(32, activation="relu"),
     tf.keras.layers.Dense(1),
 ])
 
@@ -186,35 +187,69 @@ plot_dir = Path("data/plots")
 
 epochs_ran = range(1, len(history.history["loss"]) + 1)
 
-# training and validation loss
-plt.figure(figsize=(10, 5))
-plt.plot(epochs_ran, history.history["loss"], label="Training Loss")
-plt.plot(epochs_ran, history.history["val_loss"], label="Validation Loss")
-plt.xlabel("Epoch")
-plt.ylabel("MSE Loss - scaled")
-#plt.ylabel("Huber Loss - scaled")
-plt.title("LSTM Training Curves")
-plt.legend()
-plt.grid(True, alpha=0.3)
-plt.tight_layout()
-plt.savefig(plot_dir / "lstm_loss_curves.png", dpi=150)
-plt.close()
+
+fig, axes = plt.subplots(1, 2, figsize=(15, 6))
+
+# training and validation loss 
+axes[0].plot(epochs_ran, history.history["loss"], label="Training Loss")
+axes[0].plot(epochs_ran, history.history["val_loss"], label="Validation Loss")
+axes[0].set_xlabel("Epoch")
+axes[0].set_ylabel("MSE Loss - scaled")
+axes[0].set_title("LSTM Training Loss")
+axes[0].legend()
+axes[0].grid(True, alpha=0.3)
 
 # training and validation mae
-plt.figure(figsize=(10, 5))
-plt.plot(epochs_ran, history.history["mae"], label="Training MAE")
-plt.plot(epochs_ran, history.history["val_mae"], label="Validation MAE")
-plt.xlabel("Epoch")
-plt.ylabel("MAE - scaled")
-plt.title("LSTM Training MAE curves")
-plt.legend()
-plt.grid(True, alpha=0.3)
+axes[1].plot(epochs_ran, history.history["mae"], label="Training MAE")
+axes[1].plot(epochs_ran, history.history["val_mae"], label="Validation MAE")
+axes[1].set_xlabel("Epoch")
+axes[1].set_ylabel("MAE - scaled")
+axes[1].set_title("LSTM Training MAE curves")
+axes[1].legend()
+axes[1].grid(True, alpha=0.3)
+
 plt.tight_layout()
-plt.savefig(plot_dir / "lstm_mae_curves.png", dpi=150)
+plt.savefig(plot_dir / "lstm_training_curves.png", dpi=150)
 plt.close()
 
 print(f"Training plots saved in: {plot_dir.resolve()}")
 
+
+# daily demand pattern
+pattern_df = pd.DataFrame({
+    "timestamp": pd.to_datetime(test_df["target_timestamp"]),
+    "actual": results["actual"].to_numpy(),
+    "lstm": results["lstm_predictions"].to_numpy(),
+    "seasonal_naive": results["seasonal_naive_predictions"].to_numpy()
+})
+
+# selecting first complete week in test period
+start = pattern_df["timestamp"].min().normalize()
+end = start + pd.Timedelta(days=7)
+
+week_df = pattern_df[
+    (pattern_df["timestamp"] >= start) & (pattern_df["timestamp"] < end)
+]
+
+plt.figure(figsize=(14, 6))
+plt.plot(
+    week_df["timestamp"], week_df["actual"], label="Actual", linewidth=1.5
+)
+plt.plot(
+    week_df["timestamp"], week_df["lstm"], label="LSTM", linewidth=1
+)
+plt.plot(
+    week_df["timestamp"], week_df["Seasonal Naive"], label="Seasonal Naive", linewidth=1
+)
+
+plt.xlabel("Target Timestamp")
+plt.ylabel("Electricity Demand")
+plt.title("1 Week Actual vs Forecast Demand")
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig(plot_dir / "lstm_daily_pattern_week.png", dpi=150)
+plt.close()
 
 # setting up residual analysis
 actual = results["actual"]
