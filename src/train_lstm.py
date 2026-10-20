@@ -215,7 +215,7 @@ plt.close()
 print(f"Training plots saved in: {plot_dir.resolve()}")
 
 
-# daily demand pattern
+# daily demand pattern for a week
 pattern_df = pd.DataFrame({
     "timestamp": pd.to_datetime(test_df["target_timestamp"]),
     "actual": results["actual"].to_numpy(),
@@ -239,7 +239,7 @@ plt.plot(
     week_df["timestamp"], week_df["lstm"], label="LSTM", linewidth=1
 )
 plt.plot(
-    week_df["timestamp"], week_df["Seasonal Naive"], label="Seasonal Naive", linewidth=1
+    week_df["timestamp"], week_df["seasonal_naive"], label="Seasonal Naive", linewidth=1
 )
 
 plt.xlabel("Target Timestamp")
@@ -250,6 +250,39 @@ plt.grid(True, alpha=0.3)
 plt.tight_layout()
 plt.savefig(plot_dir / "lstm_daily_pattern_week.png", dpi=150)
 plt.close()
+
+
+# average demand pattern by hour of day
+pattern_df["hour"] = pattern_df["timestamp"].dt.hour
+
+hourly_profile = (
+    pattern_df.groupby("hour")[["actual", "lstm", "seasonal_naive"]].mean()
+)
+
+plt.figure(figsize=(11, 5))
+plt.plot(
+    hourly_profile.index, hourly_profile["actual"],
+    marker="o", label="Actual"
+)
+plt.plot(
+    hourly_profile.index, hourly_profile["lstm"],
+    marker="o", label="LSTM"
+)
+plt.plot(
+    hourly_profile.index, hourly_profile["seasonal_naive"],
+    marker="o", label="Seasonal Naive"
+)
+
+plt.xticks(range(0, 24))
+plt.xlabel("Hour of day")
+plt.ylabel("Mean electricity demand")
+plt.title("Average Daily Demand Profile — Test Period")
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig(plot_dir / "lstm_average_daily_profile.png", dpi=150)
+plt.close()
+
 
 # setting up residual analysis
 actual = results["actual"]
