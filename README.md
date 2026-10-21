@@ -81,7 +81,9 @@ Models are evaluated using the same chronological test period.
 | Random Forest | 2,667.78 | 15,086,067.73 | 3,884.08 | 0.9244 | 4.34% |
 | XGBoost | 2,277.73 | 12,682,337.26 | 3,561.23 | 0.9366 | 3.65% |
 | LightGBM | 2,245.15 | 11,814,271.45 | 3,437.19 | 0.9408 | 3.66% |
-| LSTM | 4,746.12 | 36,039,675.62 | 6,003.31 | 0.8193 | 7.65% |
+| LSTM | 3,768.86 | 22,150,121.68 | 4,706.39 | 0.8889 | 6.29% |
+
+
 
 ### Evaluation metrics
 
@@ -99,8 +101,8 @@ Lower MAE, MSE, RMSE and MAPE indicate lower prediction error. Higher R² indica
 * LightGBM marginally outperformed XGBoost on MAE, RMSE, and R², while XGBoost achieved a slightly lower MAPE.
 * Both boosting models outperformed Random Forest across the reported metrics.
 * The results highlight the importance of evaluating machine-learning models against simple time-series baselines. Daily demand patterns provide a strong benchmark for short-term electricity demand forecasting.
-* A useful next step is to investigate performance by hour, day of week and demand level to identify where machine learning may provide additional value.
 * The LSTM currently underperforms the simpler forecasting baselines and requires further investigation and tuning.
+* New results indicate adding previous-day demand provides useful information for this forecasting. However, the LSTM has not yet outperformed the seasonal-naive baseline, which remains an important benchmark.
 
 ### Predictions Dataset: data/test_predictions.csv
 
