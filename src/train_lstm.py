@@ -19,7 +19,7 @@ tf.random.set_seed(42)
 
 lookback = 36
 epochs = 50
-batch_size = 64
+batch_size = 32
 
 
 # creating sequences ending at each forecast-origin row
@@ -233,7 +233,7 @@ week_df = pattern_df[
 
 plt.figure(figsize=(14, 6))
 plt.plot(
-    week_df["timestamp"], week_df["actual"], label="Actual", linewidth=1.5
+    week_df["timestamp"], week_df["actual"], label="Actual", linewidth=2
 )
 plt.plot(
     week_df["timestamp"], week_df["lstm"], label="LSTM", linewidth=1
@@ -262,15 +262,15 @@ hourly_profile = (
 plt.figure(figsize=(11, 5))
 plt.plot(
     hourly_profile.index, hourly_profile["actual"],
-    marker="o", label="Actual"
+    marker="o", label="Actual", linewidth=2
 )
 plt.plot(
     hourly_profile.index, hourly_profile["lstm"],
-    marker="o", label="LSTM"
+    marker="o", label="LSTM", linewidth=1
 )
 plt.plot(
     hourly_profile.index, hourly_profile["seasonal_naive"],
-    marker="o", label="Seasonal Naive"
+    marker="o", label="Seasonal Naive", linewidth=1
 )
 
 plt.xticks(range(0, 24))
@@ -282,6 +282,21 @@ plt.grid(True, alpha=0.3)
 plt.tight_layout()
 plt.savefig(plot_dir / "lstm_average_daily_profile.png", dpi=150)
 plt.close()
+
+
+# comparing errors during highest demand period
+peak_threshold = pattern_df["actual"].quantile(0.90)
+peak_df = pattern_df[pattern_df["actual"] >= peak_threshold]
+
+for model_name in ["lstm", "seasonal_naive"]:
+    peak_mae = np.mean(
+        np.abs(peak_df["actual"] - peak_df[model_name])
+    )
+    print(f"{model_name} peak period MAE: {peak_mae:,.2f}")
+
+print(f"Peak threshold (90th percentil): {peak_threshold:,.2f}"
+      f"\nPeak observations: {len(peak_df):,}"
+)
 
 
 # setting up residual analysis

@@ -24,6 +24,7 @@ features = [
     "zone_3_share",
     "lag_1",
     "lag_6",
+    "lag_138", # new feature added 10/21
     "lag_144",
     "rolling_1h_mean",
     "rolling_6h_mean",

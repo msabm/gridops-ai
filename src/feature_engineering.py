@@ -75,6 +75,7 @@ def create_energy_features(df):
 def create_lag_features(df):
     df["lag_1"] = df["total_power_consumption"].shift(1)
     df["lag_6"] = df["total_power_consumption"].shift(6)
+    df["lag_138"] = df["total_power_consumption"].shift(138) # new feature added 10/21
     df["lag_144"] = df["total_power_consumption"].shift(144)
     
     return df
@@ -138,7 +139,7 @@ def main():
     
     new_features = ["hour", "day_of_week", "month", "year", "is_weekend", 
                     "total_power_consumption", "zone_1_share", "zone_2_share", "zone_3_share",
-                    "lag_1", "lag_6", "lag_144", 
+                    "lag_1", "lag_6", "lag_144", "lag_138",
                     "rolling_1h_mean", "rolling_6h_mean", "rolling_24h_mean"]
     
     for feature in new_features:
