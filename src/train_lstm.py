@@ -17,7 +17,7 @@ test_timestamps = pd.to_datetime(test_df["measured_at"])
 np.random.seed(42)
 tf.random.set_seed(42)
 
-lookback = 36
+lookback = 144
 epochs = 50
 batch_size = 32
 
