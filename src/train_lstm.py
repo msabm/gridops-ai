@@ -21,7 +21,6 @@ lookback = 144
 epochs = 50
 batch_size = 32
 
-
 # creating sequences ending at each forecast-origin row
 def create_sequences(X, y, lookback):
     X_sequences = []

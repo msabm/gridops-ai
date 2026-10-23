@@ -1,5 +1,6 @@
 import pandas as pd
 import psycopg2
+import numpy as np
 import os
 from dotenv import load_dotenv
 
@@ -39,7 +40,12 @@ def load_data():
 
 
 def create_time_features(df):
-    df["hour"] = df["measured_at"].dt.hour
+    
+    #df["hour"] = df["measured_at"].dt.hour
+    hour = df["measured_at"].dt.hour
+    df["hour_sin"] = np.sin(2 * np.pi * hour / 24) # added 10/23 for lstm
+    df["hour_cos"] = np.cos(2 * np.pi * hour / 24) # added 10/23 for lstm
+
     df["day_of_week"] = df["measured_at"].dt.dayofweek
     df["month"] = df["measured_at"].dt.month
     df["year"] = df["measured_at"].dt.year
@@ -137,7 +143,8 @@ def main():
 
     print("\nNew features added:")
     
-    new_features = ["hour", "day_of_week", "month", "year", "is_weekend", 
+    new_features = [ "hour_sin", "hour_cos", #"hour"
+                    "day_of_week", "month", "year", "is_weekend", 
                     "total_power_consumption", "zone_1_share", "zone_2_share", "zone_3_share",
                     "lag_1", "lag_6", "lag_144", "lag_138",
                     "rolling_1h_mean", "rolling_6h_mean", "rolling_24h_mean"]

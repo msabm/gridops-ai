@@ -13,7 +13,9 @@ features = [
     "wind_speed",
     "general_diffuse_flows",
     "diffuse_flows",
-    "hour",
+    # "hour", # removed 10/23
+    "hour_sin", # added 10/23 for lstm
+    "hour_cos", # added 10/23 for lstm
     "day_of_week",
     "month",
     "year",
