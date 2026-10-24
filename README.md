@@ -10,6 +10,7 @@
 * Main table: `energy.power_measurements`
 * Built a Python ingestion pipeline to load the dataset into PostgreSQL
 
+
 ### Database
 
 The project uses PostgreSQL to store the electricity and environmental measurements.
@@ -26,6 +27,7 @@ gridops
 * Added an index on `measured_at` for time-based queries
 * Database schema is reproducible through `sql/schema.sql`
 
+
 ### Analytics
 
 * Added an initial SQL analytics layer
@@ -38,6 +40,7 @@ gridops
 * Ranked the three distribution zones by average consumption
 * Added analysis of consumption changes and demand patterns over time
 
+
 ### Feature Engineering
 
 * Built a Python feature-engineering pipeline using data loaded from PostgreSQL
@@ -48,6 +51,7 @@ gridops
 * Created rolling mean features for 1-hour, 6-hour, and 24-hour demand windows
 * Prepared the dataset for one-hour-ahead electricity demand forecasting
 
+
 ### Forecasting Dataset
 
 * Defined total power consumption as the forecasting target
@@ -56,6 +60,7 @@ gridops
 * Removed rows without valid features, targets or baseline predictions.
 * Used a chronological 80/20 train-test split to avoid randomly mixing historical and future observations.
 * Current prepared dataset: 52,266 observations, comprising 41,812 training observations and 10,454 test observations.
+
 
 ### Forecasting Models
 
@@ -72,6 +77,7 @@ The LSTM uses TensorFlow/Keras, with feature and target scaling, dropout regular
 
 Models are evaluated using the same chronological test period.
 
+
 ### Model Comparison
 
 | Model | MAE | MSE | RMSE | R² | MAPE |
@@ -84,7 +90,6 @@ Models are evaluated using the same chronological test period.
 | LSTM | 2,798.40 | 12,345,560.37 | 3,513.62 | 0.9381 | 4.53% |
 
 
-
 ### Evaluation metrics
 
 * **Mean Absolute Error**: Average absolute difference between predicted and actual demand.
@@ -95,14 +100,14 @@ Models are evaluated using the same chronological test period.
 
 Lower MAE, MSE, RMSE and MAPE indicate lower prediction error. Higher R² indicates better performance relative to the test-set mean baseline.
 
-### Key Findings
-
+**Key Findings**
 * The Seasonal Naive baseline achieved the best overall forecasting performance, with an MAE of 2,117.48 and an R² of 0.9481.
 * LightGBM marginally outperformed XGBoost on MAE, RMSE, and R², while XGBoost achieved a slightly lower MAPE.
 * Both boosting models outperformed Random Forest across the reported metrics.
 * The results highlight the importance of evaluating machine-learning models against simple time-series baselines. Daily demand patterns provide a strong benchmark for short-term electricity demand forecasting.
 * The LSTM currently underperforms the simpler forecasting baselines and requires further investigation and tuning.
 * New results indicate adding previous-day demand and cyclical time provides useful information for this forecasting. However, the LSTM has not yet outperformed the seasonal-naive baseline, which remains an important benchmark.
+
 
 ### Predictions Dataset: data/test_predictions.csv
 
@@ -120,6 +125,21 @@ The predictions CSV contains the actual test-set demand, forecast timestamps, ba
 | xgboost_predictions |	Demand forecast produced by the XGBoost model |
 
 
+### LSTM Explainability with SHAP
+
+Applied SHAP to the trained LSTM model to investigate which input features contributed most to demand predictions.
+
+**Key findings**
+- `lag_138` had the highest mean absolute SHAP value (0.004801), highlighting the importance of demand observed 23 hours before the forecast origin.
+- `total_power_consumption` was the second most influential feature (0.003715).
+- `lag_144` and `lag_1` also ranked highly, indicating that both daily historical patterns and recent demand are important inputs.
+- Rolling demand statistics and cyclical hour features provided additional predictive information.
+- Weather features had lower mean absolute SHAP values than the leading demand-history features.
+
+**Interpretation**
+The results suggest that the model relies primarily on historical demand patterns and current demand levels when forecasting consumption one hour ahead. SHAP provides model-specific explanations of predictive behaviour, rather than evidence of causal relationships.
+
+
 ### Project Structure
 
 ```
@@ -128,11 +148,13 @@ gridops-ai/
 │   ├── plots/
 │   ├── raw/
 │   ├── experiment_logs.xlsx
-│   └── test_predictions.csv
+│   ├── test_predictions.csv
+│   └── shap_feature_importance.csv
 ├── models/
 │   ├── random_forest.joblib
 │   ├── xgboost.joblib
 │   ├── lightgbm.joblib
+│   ├── lstm_preprocessing.joblib
 │   └── lstm_model.keras
 ├── sql/
 │   ├── schema.sql
@@ -150,6 +172,7 @@ gridops-ai/
 └── README.md
 ```
 
+
 ### Project Status
 
 **Completed**
@@ -166,10 +189,10 @@ gridops-ai/
 * [x] Build naive forecasting baselines
 * [x] Compare naive and machine learning baselines
 * [x] Compare machine learning models
+* [x] Model explainability with SHAP
 
 **Next**
 
-* [ ] Model explainability with SHAP
 * [ ] Model tracking with MLflow
 * [ ] FastAPI model serving
 * [ ] Agentic AI integration
