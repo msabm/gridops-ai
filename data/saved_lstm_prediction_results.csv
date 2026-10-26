@@ -1,0 +1,2 @@
+forecast_origin,target_timestamp,predicted_total_power_consumption,model,lookback_steps
+2017-12-30 23:50:00,2017-12-31 00:50:00,59648.91796875,LSTM,144
