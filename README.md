@@ -149,7 +149,8 @@ gridops-ai/
 │   ├── raw/
 │   ├── experiment_logs.xlsx
 │   ├── test_predictions.csv
-│   └── shap_feature_importance.csv
+│   ├── shap_feature_importance.csv
+│   └── saved_lstm_prediction_results.csv
 ├── models/
 │   ├── random_forest.joblib
 │   ├── xgboost.joblib
@@ -163,12 +164,15 @@ gridops-ai/
 ├── src/
 │   ├── load_to_postgres.py
 │   ├── feature_engineering.py
+│   ├── data_ingestion.py
 │   ├── prepare_data.py
 │   ├── train_baseline.py
 │   ├── train_xgboost.py
 |   ├── train_lightgbm.py
 |   ├── train_lstm.py
-│   └── evaluate.py
+|   ├── prediction.py
+|   ├── explainability.py
+│   └── evaluation.py
 └── README.md
 ```
 
