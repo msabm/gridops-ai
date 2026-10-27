@@ -140,6 +140,25 @@ Applied SHAP to the trained LSTM model to investigate which input features contr
 The results suggest that the model relies primarily on historical demand patterns and current demand levels when forecasting consumption one hour ahead. SHAP provides model-specific explanations of predictive behaviour, rather than evidence of causal relationships.
 
 
+### Experiment Tracking with MLFlow
+
+Using MLflow to track and compare the evaluation results of six forecasting approaches with the same tracked metrics as earlier.
+
+Runs include parameters and tags describing the model, one-hour forecast horizon, evaluation dataset, and number of evaluation rows.
+
+**Running Experiment Tracking**
+Activate the project's virtual environment, install dependencies, and run the tracking script from the repository root:
+    pip install -r requirements.txt
+    python src/track_experiments.py
+
+The script evaluates the existing predictions in data/test_predictions.csv and records the results in a local MLflow tracking database. It also generates a model comparison CSV and logs it as an MLflow artifact.
+
+To launch the MLflow UI:
+    mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000
+    Open http://127.0.0.1:5000 to inspect experiment runs, metrics, parameters, and artifacts.
+
+Note: These MLflow runs track existing evaluation results; they do not retrain the models.
+
 ### Project Structure
 
 ```
@@ -147,6 +166,7 @@ gridops-ai/
 ├── data/
 │   ├── plots/
 │   ├── raw/
+│   ├── ml_flow_model_comparison.csv
 │   ├── experiment_logs.xlsx
 │   ├── test_predictions.csv
 │   ├── shap_feature_importance.csv
@@ -172,8 +192,11 @@ gridops-ai/
 |   ├── train_lstm.py
 |   ├── prediction.py
 |   ├── explainability.py
-│   └── evaluation.py
-└── README.md
+│   ├── evaluation.py
+│   └── track_experiments.py
+│── README.md
+│── mlruns/
+└── mlflow.db
 ```
 
 
@@ -194,10 +217,10 @@ gridops-ai/
 * [x] Compare naive and machine learning baselines
 * [x] Compare machine learning models
 * [x] Model explainability with SHAP
+* [x] Model tracking with MLflow
 
 **Next**
 
-* [ ] Model tracking with MLflow
 * [ ] FastAPI model serving
 * [ ] Agentic AI integration
 * [ ] Dockerisation
