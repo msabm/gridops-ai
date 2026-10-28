@@ -34,7 +34,7 @@ features = [
 ]
 
 
-def prepare_data():
+def prepare_data(selected_features=None):
     df = load_data()
 
     df = df.drop_duplicates(subset=["measured_at"])
@@ -60,6 +60,19 @@ def prepare_data():
 
     # Chronological 80/20 split
     split_index = int(len(df) * 0.8)
+
+
+
+    if selected_features is None:
+        selected_features = features
+
+    missing_features = set(selected_features) - set(df.columns)
+
+    if missing_features:
+        raise ValueError(
+            f"Selected features are missing: {sorted(missing_features)}"
+        )
+    
 
     X = df[features]
     y = df["target_1h_ahead"]
