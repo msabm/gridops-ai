@@ -159,6 +159,19 @@ To launch the MLflow UI:
 
 Note: These MLflow runs track existing evaluation results; they do not retrain the models.
 
+
+### LSTM Feature Selection Experiments with MLFlow
+
+The LSTM training pipeline has been refactored into a reusable function to support controlled feature-selection experiments.
+
+Experiments will evaluate the impact of reducing the input feature set using SHAP-based feature importance rankings:
+* Baseline: Existing LSTM using 22 input features.
+* Experiment 1: LSTM using the top 15 SHAP-ranked features.
+* Experiment 2: LSTM using the top 10 SHAP-ranked features.
+
+The experiments will retain the same model architecture, lookback window, training configuration, and chronological data split to support a fair comparison. Results will be tracked in MLflow.
+
+
 ### Project Structure
 
 ```
