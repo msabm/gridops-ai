@@ -160,6 +160,7 @@ To launch the MLflow UI:
 Note: These MLflow runs track existing evaluation results; they do not retrain the models.
 
 
+<<<<<<< Updated upstream
 ### LSTM Feature Selection Experiments with MLFlow
 
 The LSTM training pipeline has been refactored into a reusable function to support controlled feature-selection experiments.
@@ -171,6 +172,11 @@ Experiments will evaluate the impact of reducing the input feature set using SHA
 
 The experiments will retain the same model architecture, lookback window, training configuration, and chronological data split to support a fair comparison. Results will be tracked in MLflow.
 
+=======
+**Current Progress -**
+* Built an LSTM forecasting pipeline with experiment tracking through MLflow.
+* Currently investigating LSTM architecture optimisation and SHAP-based feature selection.
+>>>>>>> Stashed changes
 
 ### Project Structure
 
