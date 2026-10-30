@@ -86,9 +86,11 @@ def main():
         )
 
     feature_sets = {
-        "lstm_top15_features": ranked_features[:15],
-        "lstm_top12_features": ranked_features[:12],
-        "lstm_top10_features": ranked_features[:10],
+        "lstm_top20_features_v2": ranked_features[:20],
+        "lstm_top17_features_v2": ranked_features[:17],       
+        "lstm_top15_features_v2": ranked_features[:15],
+        "lstm_top12_features_v2": ranked_features[:12],
+        "lstm_top10_features_v2": ranked_features[:10],
     }
 
     for name, features in feature_sets.items():

@@ -74,7 +74,7 @@ def prepare_data(selected_features=None):
         )
     
 
-    X = df[features]
+    X = df[selected_features]
     y = df["target_1h_ahead"]
 
     X_train = X.iloc[:split_index]
@@ -89,7 +89,7 @@ def prepare_data(selected_features=None):
         f"\nTotal observations: {len(df):,}"
         f"\nTraining observations: {len(X_train):,}"
         f"\nTesting observations: {len(X_test):,}"
-        f"\nNumber of features: {len(features)}"
+        f"\nNumber of features: {len(selected_features)}"
         f"\nTraining period: {df['measured_at'].iloc[0]} "
         f"to {df['measured_at'].iloc[split_index - 1]}"
         f"\nTesting period: {test_df['measured_at'].iloc[0]} "
