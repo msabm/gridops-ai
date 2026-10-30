@@ -147,36 +147,25 @@ Using MLflow to track and compare the evaluation results of six forecasting appr
 Runs include parameters and tags describing the model, one-hour forecast horizon, evaluation dataset, and number of evaluation rows.
 
 **Running Experiment Tracking**
+
 Activate the project's virtual environment, install dependencies, and run the tracking script from the repository root:
-    pip install -r requirements.txt
-    python src/track_experiments.py
+* pip install -r requirements.txt
+* python src/track_experiments.py
 
 The script evaluates the existing predictions in data/test_predictions.csv and records the results in a local MLflow tracking database. It also generates a model comparison CSV and logs it as an MLflow artifact.
 
 To launch the MLflow UI:
-    mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000
-    Open http://127.0.0.1:5000 to inspect experiment runs, metrics, parameters, and artifacts.
+* mlflow ui --backend-store-uri sqlite:///mlflow.db --port 5000
+* Open http://127.0.0.1:5000 to inspect experiment runs, metrics, parameters, and artifacts.
 
 Note: These MLflow runs track existing evaluation results; they do not retrain the models.
 
 
-<<<<<<< Updated upstream
-### LSTM Feature Selection Experiments with MLFlow
+**Current Progress**
 
-The LSTM training pipeline has been refactored into a reusable function to support controlled feature-selection experiments.
-
-Experiments will evaluate the impact of reducing the input feature set using SHAP-based feature importance rankings:
-* Baseline: Existing LSTM using 22 input features.
-* Experiment 1: LSTM using the top 15 SHAP-ranked features.
-* Experiment 2: LSTM using the top 10 SHAP-ranked features.
-
-The experiments will retain the same model architecture, lookback window, training configuration, and chronological data split to support a fair comparison. Results will be tracked in MLflow.
-
-=======
-**Current Progress -**
 * Built an LSTM forecasting pipeline with experiment tracking through MLflow.
 * Currently investigating LSTM architecture optimisation and SHAP-based feature selection.
->>>>>>> Stashed changes
+* Testing and correcting the MLflow pipeline for feature selection and comparison for LSTM model.
 
 ### Project Structure
 
