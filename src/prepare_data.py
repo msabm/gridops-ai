@@ -34,7 +34,7 @@ features = [
 ]
 
 
-def prepare_data():
+def prepare_data(selected_features=None):
     df = load_data()
 
     df = df.drop_duplicates(subset=["measured_at"])
@@ -61,7 +61,20 @@ def prepare_data():
     # Chronological 80/20 split
     split_index = int(len(df) * 0.8)
 
-    X = df[features]
+
+
+    if selected_features is None:
+        selected_features = features
+
+    missing_features = set(selected_features) - set(df.columns)
+
+    if missing_features:
+        raise ValueError(
+            f"Selected features are missing: {sorted(missing_features)}"
+        )
+    
+
+    X = df[selected_features]
     y = df["target_1h_ahead"]
 
     X_train = X.iloc[:split_index]
@@ -76,7 +89,7 @@ def prepare_data():
         f"\nTotal observations: {len(df):,}"
         f"\nTraining observations: {len(X_train):,}"
         f"\nTesting observations: {len(X_test):,}"
-        f"\nNumber of features: {len(features)}"
+        f"\nNumber of features: {len(selected_features)}"
         f"\nTraining period: {df['measured_at'].iloc[0]} "
         f"to {df['measured_at'].iloc[split_index - 1]}"
         f"\nTesting period: {test_df['measured_at'].iloc[0]} "
