@@ -137,6 +137,7 @@ Applied SHAP to the trained LSTM model to investigate which input features contr
 - Weather features had lower mean absolute SHAP values than the leading demand-history features.
 
 **Interpretation**
+
 The results suggest that the model relies primarily on historical demand patterns and current demand levels when forecasting consumption one hour ahead. SHAP provides model-specific explanations of predictive behaviour, rather than evidence of causal relationships.
 
 
@@ -166,6 +167,7 @@ Note: These MLflow runs track existing evaluation results; they do not retrain t
 * Built an LSTM forecasting pipeline with experiment tracking through MLflow.
 * Currently investigating LSTM architecture optimisation and SHAP-based feature selection.
 * Testing and correcting the MLflow pipeline for feature selection and comparison for LSTM model.
+* Setting up FastAPI using the best performing model.
 
 ### Project Structure
 
@@ -175,6 +177,7 @@ gridops-ai/
 │   ├── plots/
 │   ├── raw/
 │   ├── ml_flow_model_comparison.csv
+│   ├── lstm_feature_selection_results.csv
 │   ├── experiment_logs.xlsx
 │   ├── test_predictions.csv
 │   ├── shap_feature_importance.csv
@@ -184,12 +187,19 @@ gridops-ai/
 │   ├── xgboost.joblib
 │   ├── lightgbm.joblib
 │   ├── lstm_preprocessing.joblib
+│   ├── lstm_final_top10_model.keras
+│   ├── lstm_final_top10_preprocessing.joblib
 │   └── lstm_model.keras
 ├── sql/
 │   ├── schema.sql
 │   ├── README.md
 │   └── analytics.sql
 ├── src/
+│   ├──api/
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── schemas.py
+│   │   └── services.py
 │   ├── load_to_postgres.py
 │   ├── feature_engineering.py
 │   ├── data_ingestion.py
@@ -226,10 +236,10 @@ gridops-ai/
 * [x] Compare machine learning models
 * [x] Model explainability with SHAP
 * [x] Model tracking with MLflow
+* [ ] FastAPI model serving
 
 **Next**
 
-* [ ] FastAPI model serving
 * [ ] Agentic AI integration
 * [ ] Dockerisation
 * [ ] Deployment
