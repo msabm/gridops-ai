@@ -182,7 +182,10 @@ def train_lstm(
 
     # saving the lstm model
     if save_outputs:
-        model.save("models/lstm_model.keras")
+        model_path = Path(f"models/{run_name}_model.keras")
+        preprocessing_path = Path(f"models/{run_name}_preprocessing.joblib")   
+        
+        model.save(model_path)
 
         joblib.dump(
             {
@@ -191,7 +194,7 @@ def train_lstm(
                 "lookback": lookback,
                 "feature_columns": feature_columns,
             },
-            "models/lstm_preprocessing.joblib",
+            preprocessing_path,
         )
 
     print(f"Lookback window: {lookback} time steps"

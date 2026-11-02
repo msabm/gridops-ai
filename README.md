@@ -166,8 +166,12 @@ Note: These MLflow runs track existing evaluation results; they do not retrain t
 
 * Built an LSTM forecasting pipeline with experiment tracking through MLflow.
 * Currently investigating LSTM architecture optimisation and SHAP-based feature selection.
+<<<<<<< HEAD
 * Testing and correcting the MLflow pipeline for feature selection and comparison for LSTM model.
 * Setting up FastAPI using the best performing model.
+=======
+* Testing revealed training with top 10 features yields the best results. (R2: 0.951 | MAPE: 4.3%)
+>>>>>>> feat/fastapi-integration
 
 ### Project Structure
 
