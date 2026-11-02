@@ -3,7 +3,7 @@
 from datetime import datetime
 from pydantic import BaseModel, Field
 
-class forecastRresponse(BaseModel):
+class ForecastResponse(BaseModel):
     forecast_origin: datetime
     target_timestamp: datetime
     predicted_total_power_consumption: float = Field(
