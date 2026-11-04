@@ -255,7 +255,22 @@ The current test suite contains three passing tests.
 
 **Data scope:** The current API forecasts from the latest measurements available in the project's PostgreSQL dataset. Since the source dataset is historical, this is an inference demonstration on the latest stored observations, not a live connection to an electricity meter or real-time grid feed.
 
-## Project Structure
+### Example API Response
+
+A successful request to `/forecast` returns:
+
+```json
+{
+    "forecast_origin": "2017-12-30T23:50:00",
+    "target_timestamp": "2017-12-31T00:50:00",
+    "predicted_total_power_consumption": 56445.41,
+    "model": "LSTM",
+    "features": 10,
+    "lookback_steps": 144
+}
+```
+
+### Project Structure
 
 ```text
 gridops-ai/
